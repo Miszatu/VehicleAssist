@@ -53,10 +53,7 @@ protected:
 	int32 MaxV;
 
 	/* Box Component Start and End Road */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Setup")
 	class UBoxComponent* BoxStart;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Setup")
 	class UBoxComponent* BoxEnd;
 
 	/* Spline Mesh */
@@ -66,9 +63,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Setup")
 	float Divisor = 500.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Setup")
-	bool Tangent = true;
 	
 	/* Spline*/
 	UPROPERTY(VisibleAnywhere, Category = "Spline Setup")
@@ -77,7 +71,6 @@ protected:
 	/* SplineMesh variables*/
 	float DistanceA;
 	float DistanceB;
-	float TangentFloat;
 
 	/* Scene Components*/
 	UPROPERTY(VisibleAnywhere, Category = "Spawning")

@@ -40,9 +40,9 @@ ASpawnAuto::ASpawnAuto()
 
 	/* Set SplineMesh Road*/
 	Mesh = CreateDefaultSubobject<UStaticMesh>(TEXT("Mesh"));
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshAsset(TEXT("StaticMesh'/Game/Meshes/SM_Env_Road_Lines_03.SM_Env_Road_Lines_03'"));
-	UStaticMesh* SM_Asset = MeshAsset.Object;
-	Mesh = SM_Asset;
+	//static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshAsset(TEXT("StaticMesh'/Game/Meshes/SM_Env_Road_Lines_03.SM_Env_Road_Lines_03'"));
+	//UStaticMesh* SM_Asset = MeshAsset.Object;
+	//Mesh = SM_Asset;
 
 	/* Set the spawn delay range */
 	SpawnDelayRangeLow = 10.0f;
@@ -70,17 +70,15 @@ void ASpawnAuto::OnConstruction(const FTransform& Transform)
 		SplineMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		DistanceA = Divisor * SplineCount;
 		DistanceB = (Divisor * SplineCount) + Divisor;
-		if (Tangent)
-		{
-			SplineMeshComponent->SetStaticMesh(Mesh);
-			SplineMeshComponent->SetStartAndEnd(
-				FVector(Spline->GetLocationAtDistanceAlongSpline(DistanceA, ESplineCoordinateSpace::Local)),
-				FVector(Spline->GetDirectionAtDistanceAlongSpline(DistanceA, ESplineCoordinateSpace::Local)) + TangentFloat,
-				FVector(Spline->GetLocationAtDistanceAlongSpline(DistanceB, ESplineCoordinateSpace::Local)),
-				FVector(Spline->GetDirectionAtDistanceAlongSpline(DistanceB, ESplineCoordinateSpace::Local)) + TangentFloat,
-				true
-			);
-		}
+
+		SplineMeshComponent->SetStaticMesh(Mesh);
+		SplineMeshComponent->SetStartAndEnd(
+			FVector(Spline->GetLocationAtDistanceAlongSpline(DistanceA, ESplineCoordinateSpace::Local)),
+			FVector(Spline->GetDirectionAtDistanceAlongSpline(DistanceA, ESplineCoordinateSpace::Local)),
+			FVector(Spline->GetLocationAtDistanceAlongSpline(DistanceB, ESplineCoordinateSpace::Local)),
+			FVector(Spline->GetDirectionAtDistanceAlongSpline(DistanceB, ESplineCoordinateSpace::Local)),
+			true
+		);
 	}
 	EndRoad->SetRelativeLocation(FVector(Spline->GetSplineLength(), 0.0f, 0.0f));
 }
