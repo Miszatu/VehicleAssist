@@ -39,7 +39,10 @@ ASpawnAuto::ASpawnAuto()
 	BoxEnd->OnComponentBeginOverlap.AddDynamic(this, &ASpawnAuto::OnOverlapBegin);
 
 	/* Set SplineMesh Road*/
-	Mesh = CreateDefaultSubobject<UStaticMesh>(TEXT("Mesh"));
+	if (Mesh != nullptr)
+	{
+		Mesh = CreateDefaultSubobject<UStaticMesh>(TEXT("Mesh"));
+	}
 	//static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshAsset(TEXT("StaticMesh'/Game/Meshes/SM_Env_Road_Lines_03.SM_Env_Road_Lines_03'"));
 	//UStaticMesh* SM_Asset = MeshAsset.Object;
 	//Mesh = SM_Asset;
@@ -60,25 +63,25 @@ void ASpawnAuto::OnConstruction(const FTransform& Transform)
 	int32 Count = UKismetMathLibrary::FMod(Spline->GetSplineLength(),Divisor, Reminder);
 	for (int SplineCount = 0; SplineCount < Count; SplineCount++)
 	{
-		USplineMeshComponent* SplineMeshComponent = NewObject<USplineMeshComponent>(this,USplineMeshComponent::StaticClass());
-		SplineMeshArr.Add(SplineMeshComponent);
-		SplineMeshComponent->SetStaticMesh(Mesh);
-		SplineMeshComponent->SetMobility(EComponentMobility::Movable);
-		SplineMeshComponent->CreationMethod = EComponentCreationMethod::UserConstructionScript;
-		SplineMeshComponent->RegisterComponentWithWorld(GetWorld());
-		SplineMeshComponent->AttachToComponent(Spline, FAttachmentTransformRules::KeepRelativeTransform);
-		SplineMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		DistanceA = Divisor * SplineCount;
-		DistanceB = (Divisor * SplineCount) + Divisor;
+			USplineMeshComponent* SplineMeshComponent = NewObject<USplineMeshComponent>(this, USplineMeshComponent::StaticClass());
+			SplineMeshArr.Add(SplineMeshComponent);
 
-		SplineMeshComponent->SetStaticMesh(Mesh);
-		SplineMeshComponent->SetStartAndEnd(
-			FVector(Spline->GetLocationAtDistanceAlongSpline(DistanceA, ESplineCoordinateSpace::Local)),
-			FVector(Spline->GetDirectionAtDistanceAlongSpline(DistanceA, ESplineCoordinateSpace::Local)),
-			FVector(Spline->GetLocationAtDistanceAlongSpline(DistanceB, ESplineCoordinateSpace::Local)),
-			FVector(Spline->GetDirectionAtDistanceAlongSpline(DistanceB, ESplineCoordinateSpace::Local)),
-			true
-		);
+			SplineMeshComponent->SetStaticMesh(Mesh);
+			SplineMeshComponent->SetMobility(EComponentMobility::Movable);
+			SplineMeshComponent->CreationMethod = EComponentCreationMethod::UserConstructionScript;
+			SplineMeshComponent->RegisterComponentWithWorld(GetWorld());
+			SplineMeshComponent->AttachToComponent(Spline, FAttachmentTransformRules::KeepRelativeTransform);
+			SplineMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			DistanceA = Divisor * SplineCount;
+			DistanceB = (Divisor * SplineCount) + Divisor;
+			SplineMeshComponent->SetStaticMesh(Mesh);
+			SplineMeshComponent->SetStartAndEnd(
+				FVector(Spline->GetLocationAtDistanceAlongSpline(DistanceA, ESplineCoordinateSpace::Local)),
+				FVector(Spline->GetDirectionAtDistanceAlongSpline(DistanceA, ESplineCoordinateSpace::Local)),
+				FVector(Spline->GetLocationAtDistanceAlongSpline(DistanceB, ESplineCoordinateSpace::Local)),
+				FVector(Spline->GetDirectionAtDistanceAlongSpline(DistanceB, ESplineCoordinateSpace::Local)),
+				true
+			);
 	}
 	EndRoad->SetRelativeLocation(FVector(Spline->GetSplineLength(), 0.0f, 0.0f));
 }
