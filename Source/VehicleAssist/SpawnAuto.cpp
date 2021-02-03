@@ -16,16 +16,22 @@ ASpawnAuto::ASpawnAuto()
 
 	/* Create objects */
 	WhereToSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("WhereToSpawn"));
-	BoxStart = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxStart"));
-	Spline = CreateDefaultSubobject<USplineComponent>(TEXT("Spline"));
-	EndRoad = CreateDefaultSubobject<USceneComponent>(TEXT("EndRoad"));
-	BoxEnd = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxEnd"));
-
 	RootComponent = WhereToSpawn;
-	WhereToSpawn->SetWorldLocation(FVector(250.0f, -250.0f, 50.0f));
 
+	Spline = CreateDefaultSubobject<USplineComponent>(TEXT("Spline"));
 	Spline->AttachToComponent(WhereToSpawn, FAttachmentTransformRules::KeepRelativeTransform);
-	Spline->SetRelativeLocation(FVector(-100.0f, 250.0f, -50.0f));
+
+	/* Set SplineMesh Road*/
+	if (Mesh != nullptr)
+	{
+		Mesh = CreateDefaultSubobject<UStaticMesh>(TEXT("Mesh"));
+	}
+
+	BoxStart = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxStart"));
+
+	EndRoad = CreateDefaultSubobject<USceneComponent>(TEXT("EndRoad"));
+
+	BoxEnd = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxEnd"));
 
 	/* Set dimensions of two BoxComponent */
 	BoxStart->InitBoxExtent(FVector(250.0f, 250.0f, 250.0f));
@@ -37,15 +43,6 @@ ASpawnAuto::ASpawnAuto()
 
 	/* If Cube Auto Overlap BoxEnd (End of Road) then will be destroyed */
 	BoxEnd->OnComponentBeginOverlap.AddDynamic(this, &ASpawnAuto::OnOverlapBegin);
-
-	/* Set SplineMesh Road*/
-	if (Mesh != nullptr)
-	{
-		Mesh = CreateDefaultSubobject<UStaticMesh>(TEXT("Mesh"));
-	}
-	//static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshAsset(TEXT("StaticMesh'/Game/Meshes/SM_Env_Road_Lines_03.SM_Env_Road_Lines_03'"));
-	//UStaticMesh* SM_Asset = MeshAsset.Object;
-	//Mesh = SM_Asset;
 
 	/* Set the spawn delay range */
 	SpawnDelayRangeLow = 10.0f;
@@ -120,10 +117,10 @@ void ASpawnAuto::SpawnFunction()
 			/* Set the spawn parameters */
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.Owner = this;
-			FTransform TransformActor = this->GetActorTransform();
+			FVector SpawnActorLocation = this->GetActorLocation() + FVector(0,0,50);
 			/* Set speed for spawn autos */
 			Speed = UKismetMathLibrary::RandomIntegerInRange(MinV, MaxV);
-			AAutoCube* SpawnActor = World->SpawnActor<AAutoCube>(WhatToSpawn, TransformActor, SpawnParams);
+			AAutoCube* SpawnActor = World->SpawnActor<AAutoCube>(WhatToSpawn, FTransform(SpawnActorLocation), SpawnParams);
 			SpawnActor->SetMaxSpeed(Speed);
 
 			/* Calculate new delay and calling "SpawnFunction" */

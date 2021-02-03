@@ -31,7 +31,6 @@ AAutoCube::AAutoCube()
 	/* At the beginning of the object */
 	Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
 	Arrow->AttachToComponent(AutoCubeMesh, FAttachmentTransformRules::KeepRelativeTransform);
-
 }
 
 // Called when the game starts or when spawned
