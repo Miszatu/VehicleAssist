@@ -63,7 +63,7 @@ protected:
 	void DecreaseSpeed(float Ratio);
 	
 	UFUNCTION(BlueprintCallable)
-	void SetSpeedKMH();
+	void SetSpeedKMH(float DeltaTime);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CubeCarSetup")
 	class UArrowComponent* Arrow;
@@ -76,4 +76,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetMaxSpeed(float MaxV);
+
+	float CalcCurrentSpeed();
+
+	FVector PrevLocation;
 };
